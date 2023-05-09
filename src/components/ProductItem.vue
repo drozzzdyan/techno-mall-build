@@ -10,7 +10,8 @@
     </h3>
 
     <span class="catalog__price">
-      {{ product.price }} ₽
+      <!-- фильтры используем через | -->
+      {{ product.price | numberFormat }} ₽
     </span>
     <ul class="colors colors--black">
       <li class="colors__item" v-for="color in productsColors" :key="color">
@@ -25,8 +26,9 @@
 </template>
 
 <script>
-import eventBus from '@/eventBus';
 import colors from '@/datas/colors';
+import gotoPage from '@/helpers/gotoPage';
+import numberFormat from '@/helpers/numberFormat';
 
 export default {
   data() {
@@ -39,12 +41,15 @@ export default {
   props: ['product'],
 
   methods: {
-    gotoPage(pageName, pageProps) {
-      eventBus.$emit('gotoPage', pageName, pageProps);
-    },
+    gotoPage,
     getColorHex(colorId) {
       return colors.find(el => el.colorId === colorId).colorHex;
     },
+  },
+
+  // фильтры, которые можно применять к методам
+  filters: {
+    numberFormat,
   },
 };
 </script>

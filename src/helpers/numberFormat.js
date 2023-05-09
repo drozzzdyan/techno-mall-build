@@ -1,0 +1,4 @@
+// Создадим функцию форматирующую числа с разделителем
+export default function numberFormat(num) {
+  return new Intl.NumberFormat().format(num);
+};
