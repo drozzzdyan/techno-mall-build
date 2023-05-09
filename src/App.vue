@@ -1,11 +1,12 @@
 <template>
-  <component :is="currentPageComponent" :page-props="currentPageProps" @gotoPage="(pageName, pageProps) => gotoPage(pageName, pageProps)" />
+  <component :is="currentPageComponent" :page-props="currentPageProps" />
 </template>
 
 <script>
 import MainPage from './pages/MainPage.vue';
 import ProductPage from './pages/ProductPage.vue';
 import NotFoundPage from './pages/NotFoundPage.vue';
+import eventBus from './eventBus';
 
 // Список с отображаемыми компонентами
 const routes = {
@@ -38,6 +39,12 @@ export default {
     MainPage,
     ProductPage,
     NotFoundPage,
+  },
+
+  // хук жизненного цикла
+  created() {
+    // тлавливаем событие из шины событий, первый параметр - название события, второй - исполняемая функция
+    eventBus.$on('gotoPage', (pageName, pageProps) => this.gotoPage(pageName, pageProps));
   },
 };
 </script>

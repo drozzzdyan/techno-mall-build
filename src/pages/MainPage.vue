@@ -13,7 +13,7 @@
       <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
         :category-id.sync="filterCategorieId" :color.sync="filterColor" />
       <section class="catalog">
-        <ProductList :products="products" @gotoPage="(pageName, pageProps) => $emit('gotoPage', pageName, pageProps)"></ProductList>
+        <ProductList :products="products"></ProductList>
         <!-- Короткая запись, если ничего не указываем внутри блока -->
         <!-- Всё, что написано в cebab case будет само преобразовано в camel case -->
         <AppPagination v-model="page" :current-page.sync="page" :count-all-items="countAllProducts"

@@ -1,6 +1,6 @@
 <template>
   <li class="catalog__item">
-    <a class="catalog__pic" href="#" @click.prevent="$emit('gotoPage', 'product', {id: product.id})">
+    <a class="catalog__pic" href="#" @click.prevent="gotoPage('product', { id: product.id })">
       <img :src="product.image" :alt="product.name">
     </a>
     <h3 class="catalog__title">
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus';
 import colors from '@/datas/colors';
 
 export default {
@@ -36,8 +37,11 @@ export default {
   },
 
   props: ['product'],
-  
+
   methods: {
+    gotoPage(pageName, pageProps) {
+      eventBus.$emit('gotoPage', pageName, pageProps);
+    },
     getColorHex(colorId) {
       return colors.find(el => el.colorId === colorId).colorHex;
     },
