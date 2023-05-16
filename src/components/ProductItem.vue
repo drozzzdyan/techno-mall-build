@@ -1,8 +1,8 @@
 <template>
   <li class="catalog__item">
-    <a class="catalog__pic" href="#" @click.prevent="gotoPage('product', { id: product.id })">
+    <router-link class="catalog__pic" :to="{ name: 'product', params: { id: product.id } }">
       <img :src="product.image" :alt="product.name">
-    </a>
+    </router-link>
     <h3 class="catalog__title">
       <a href="#">
         {{ product.name }}
@@ -15,9 +15,9 @@
     </span>
     <ul class="colors colors--black">
       <li class="colors__item" v-for="color in productsColors" :key="color">
-        <label class="colors__label">
-          <input class="colors__radio sr-only" type="radio" :value="getColorHex(color)" v-model="currentColor">
-          <span class="colors__value" :style="'background-color:' + getColorHex(color) + ';'">
+        <label for="#color" class="colors__label">
+          <input class="colors__radio sr-only" type="radio" :value="hex(color)" v-model="nowColor">
+          <span id="color" class="colors__value" :style="'background-color:' + hex(color) + ';'">
           </span>
         </label>
       </li>
@@ -33,7 +33,7 @@ import numberFormat from '@/helpers/numberFormat';
 export default {
   data() {
     return {
-      currentColor: '',
+      nowColor: '',
       productsColors: this.product.colorsId,
     };
   },
@@ -42,8 +42,8 @@ export default {
 
   methods: {
     gotoPage,
-    getColorHex(colorId) {
-      return colors.find(el => el.colorId === colorId).colorHex;
+    hex(colorId) {
+      return colors.find((el) => el.colorId === colorId).colorHex;
     },
   },
 

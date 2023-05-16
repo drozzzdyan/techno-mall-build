@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable -->
   <ul class="catalog__pagination pagination">
     <li class="pagination__item">
       <a href="#" class="pagination__link pagination__link--arrow"

@@ -53,25 +53,25 @@ export default {
 
   computed: {
     filtredProducts() {
-      let filtredProducts = products;
+      let filtred = products;
 
       if (this.filterPriceFrom > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.price > this.filterPriceFrom);
+        filtred = filtred.filter((product) => product.price > this.filterPriceFrom);
       }
 
       if (this.filterPriceTo > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.price < this.filterPriceTo);
+        filtred = filtred.filter((product) => product.price < this.filterPriceTo);
       }
 
       if (this.filterCategorieId > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.categorieId === this.filterCategorieId);
+        filtred = filtred.filter((product) => product.categorieId === this.filterCategorieId);
       }
 
       if (this.filterColor > 0) {
-        filtredProducts = filtredProducts.filter((product) => product.colorsId.includes(this.filterColor));
+        filtred = filtred.filter((product) => product.colorsId.includes(this.filterColor));
       }
 
-      return filtredProducts;
+      return filtred;
     },
     products() {
       const firstProductOnPage = (this.page - 1) * this.productsPerPage;
