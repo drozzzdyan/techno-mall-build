@@ -1,5 +1,6 @@
 <template>
   <main class="content container">
+    <!-- {{ loadProducts() }} -->
     <div class="content__top content__top--catalog">
       <h1 class="content__title">
         Каталог
@@ -29,6 +30,7 @@ import products from '@/datas/products';
 import ProductList from '@/components/ProductList.vue';
 import AppPagination from '@/components/AppPagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import axios from 'axios';
 
 export default {
   // Указываем какие компоненты мы будем подключать
@@ -48,6 +50,9 @@ export default {
       // данные для пагинации
       page: 1,
       productsPerPage: 6,
+
+      // переменная для ответа из http запроса
+      productsData: null,
     };
   },
 
@@ -74,13 +79,37 @@ export default {
       return filtred;
     },
     products() {
-      const firstProductOnPage = (this.page - 1) * this.productsPerPage;
-      const lastProductOnPage = firstProductOnPage + this.productsPerPage;
-      return this.filtredProducts.slice(firstProductOnPage, lastProductOnPage);
+      // Прошлый код
+      // const firstProductOnPage = (this.page - 1) * this.productsPerPage;
+      // const lastProductOnPage = firstProductOnPage + this.productsPerPage;
+      // return this.filtredProducts.slice(firstProductOnPage, lastProductOnPage);
+
+      // Так как на момент загрузки productsData ещё null
+      return this.productsData ? this.productsData.items : [];
     },
     countAllProducts() {
-      return this.filtredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0;
     },
   },
+
+  methods: {
+    loadProducts() {
+      // этот метод сразу переводит JSON
+      axios.get(`https://vue-study.skillbox.cc/api/products?page=${this.page}&limit=${this.productsPerPage}`)
+        .then((response) => { this.productsData = response.data; });
+    },
+
+    // НЕ РАБОТАЕТ
+    created() {
+      this.loadProducts();
+    },
+  },
+
+  watch: {
+    page() {
+      this.loadProducts();
+    },
+  },
+
 };
 </script>
