@@ -22,6 +22,8 @@
       </span>
     </div>
 
+    <ComponentPreloader v-if="$store.state.cartLoading" />
+
     <section class="cart">
       <form class="cart__form form" action="#" method="POST">
         <div class="cart__field">
@@ -35,6 +37,8 @@
             Мы&nbsp;посчитаем стоимость доставки на&nbsp;следующем этапе
           </p>
           <p class="cart__price">
+            <ComponentPreloader v-if="$store.state.cartLoading" />
+
             Итого: <span>{{ formatPrice(totalPrice) }} ₽</span>
           </p>
 
@@ -50,6 +54,7 @@
 <script>
 import CartItem from '@/components/CartItem.vue';
 import numberFormat from '@/helpers/numberFormat';
+import ComponentPreloader from '@/components/ComponentPreloader.vue';
 
 export default {
   data() {
@@ -60,6 +65,7 @@ export default {
 
   components: {
     CartItem,
+    ComponentPreloader,
   },
 
   methods: {

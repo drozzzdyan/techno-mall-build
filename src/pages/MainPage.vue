@@ -1,6 +1,5 @@
 <template>
   <main class="content container">
-    <!-- {{ loadProducts() }} -->
     <div class="content__top content__top--catalog">
       <h1 class="content__title">
         Каталог
@@ -12,8 +11,11 @@
 
     <div class="content__catalog">
       <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
-        :category-id.sync="filterCategorieId" :color.sync="filterColor" />
+        :category-id.sync="filterCategorieId" :color.sync="filterColorId" />
       <section class="catalog">
+        <ComponentPreloaderVue v-if="productsLoading" />
+        <LoadingError v-if="productsLoadingFailed" />
+
         <ProductList :products="products"></ProductList>
         <!-- Короткая запись, если ничего не указываем внутри блока -->
         <!-- Всё, что написано в cebab case будет само преобразовано в camel case -->
@@ -26,11 +28,14 @@
 
 <script>
 // Импортируем данные и компоненты. @ - содержит абсолютный путь к папке src
-import products from '@/datas/products';
 import ProductList from '@/components/ProductList.vue';
 import AppPagination from '@/components/AppPagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import ComponentPreloaderVue from '@/components/ComponentPreloader.vue';
+import LoadingError from '@/components/LoadingError.vue';
+
 import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   // Указываем какие компоненты мы будем подключать
@@ -38,6 +43,8 @@ export default {
     ProductList,
     AppPagination,
     ProductFilter,
+    ComponentPreloaderVue,
+    LoadingError,
   },
 
   data() {
@@ -46,44 +53,22 @@ export default {
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategorieId: 0,
-      filterColor: 0,
+      filterColorId: 0,
       // данные для пагинации
       page: 1,
       productsPerPage: 6,
 
       // переменная для ответа из http запроса
       productsData: null,
+
+      // индикатор для загрузки данныз с API
+      productsLoading: false,
+      productsLoadingFailed: false,
     };
   },
 
   computed: {
-    filtredProducts() {
-      let filtred = products;
-
-      if (this.filterPriceFrom > 0) {
-        filtred = filtred.filter((product) => product.price > this.filterPriceFrom);
-      }
-
-      if (this.filterPriceTo > 0) {
-        filtred = filtred.filter((product) => product.price < this.filterPriceTo);
-      }
-
-      if (this.filterCategorieId > 0) {
-        filtred = filtred.filter((product) => product.categorieId === this.filterCategorieId);
-      }
-
-      if (this.filterColor > 0) {
-        filtred = filtred.filter((product) => product.colorsId.includes(this.filterColor));
-      }
-
-      return filtred;
-    },
     products() {
-      // Прошлый код
-      // const firstProductOnPage = (this.page - 1) * this.productsPerPage;
-      // const lastProductOnPage = firstProductOnPage + this.productsPerPage;
-      // return this.filtredProducts.slice(firstProductOnPage, lastProductOnPage);
-
       // Так как на момент загрузки productsData ещё null
       return this.productsData ? this.productsData.items : [];
     },
@@ -94,19 +79,54 @@ export default {
 
   methods: {
     loadProducts() {
-      // этот метод сразу переводит JSON
-      axios.get(`https://vue-study.skillbox.cc/api/products?page=${this.page}&limit=${this.productsPerPage}`)
-        .then((response) => { this.productsData = response.data; });
-    },
-
-    // НЕ РАБОТАЕТ
-    created() {
-      this.loadProducts();
+      // предотвращаем повторный вызов вотчерами
+      clearTimeout(this.loadTimerOut);
+      this.loadTimerOut = setTimeout(() => {
+        this.productsLoading = true;
+        this.productsLoadingFailed = false;
+        // этот метод сразу переводит JSON
+        axios
+          .get(
+            `${API_BASE_URL}/api/products`,
+            {
+              // чтобы не писать огромную строчку из параметров
+              params: {
+                page: this.page,
+                limit: this.productsPerPage,
+                categoryId: this.filterCategorieId,
+                colorId: this.filterColorId,
+                minPrice: this.filterPriceFrom,
+                maxPrice: this.filterPriceTo,
+              },
+            },
+          )
+          .then((response) => { this.productsData = response.data; })
+          .catch(() => { this.productsLoadingFailed = true; })
+          .then(() => { this.productsLoading = false; });
+      }, 0);
     },
   },
 
+  created() {
+    this.loadProducts();
+    this.$store.dispatch('loadCategories');
+  },
+
+  // следим за изменениями свойств, чтобы перерисовать страницу при необходиомсти
   watch: {
     page() {
+      this.loadProducts();
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    filterCategorieId() {
+      this.loadProducts();
+    },
+    filterColorId() {
       this.loadProducts();
     },
   },

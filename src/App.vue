@@ -12,7 +12,7 @@
           8 800 600 90 09
         </a>
 
-        <CartIndicator/>
+        <CartIndicator />
       </div>
     </header>
     <!-- Отображается тот компонент, который соответсвует автивной странице в роутере -->
@@ -119,6 +119,11 @@ import CartIndicator from '@/components/CartIndicator.vue';
 export default {
   components: {
     CartIndicator,
+  },
+
+  created() {
+    // вызов действия, прописанного в глобальном хранилище
+    this.$store.dispatch('loadCart');
   },
 };
 </script>

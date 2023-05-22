@@ -22,7 +22,7 @@
           <select class="form__select" type="text" name="category" v-model="currentCategoryId">
             <option id="category" value="0">Все категории</option>
             <option :value="category.id" v-for="category in categories" :key="category.id">
-              {{ category.name }}
+              {{ category.title }}
             </option>
           </select>
         </label>
@@ -31,11 +31,10 @@
       <fieldset class="form__block">
         <legend class="form__legend">Цвет</legend>
         <ul class="colors">
-          <li class="colors__item" v-for="color in colors" :key="color.colorHex">
+          <li class="colors__item" v-for="color in colors" :key="color.code">
             <label class="colors__label">
-              <input class="colors__radio sr-only" type="radio" name="color" :value="color.colorId"
-                v-model="currentColorId">
-              <span class="colors__value" :style="'background-color:' + color.colorHex">
+              <input class="colors__radio sr-only" type="radio" name="color" :value="color.code" v-model="currentColorCode">
+              <span class="colors__value" :style="'background-color:' + color.code">
               </span>
             </label>
           </li>
@@ -53,8 +52,8 @@
 </template>
 
 <script>
-import categories from '@/datas/categories';
-import colors from '@/datas/colors';
+import axios from 'axios';
+import { API_BASE_URL } from '@/config';
 
 export default {
   data() {
@@ -62,18 +61,27 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
-      currentColorId: 1,
+      currentColorCode: '',
+
+      colorsData: null,
+      categoryData: null,
     };
   },
+
   props: ['priceFrom', 'priceTo', 'categoryId', 'color'],
+
   computed: {
     categories() {
-      return categories;
+      return this.$store.state.productsCategories;
     },
     colors() {
-      return colors;
+      return this.colorsData ? this.colorsData.items.slice(0, -1) : [];
+    },
+    currentColorId() {
+      return this.colorsData ? this.colorsData.items.find((el) => el.code === this.currentColorCode).id : '';
     },
   },
+
   methods: {
     submitFilter() {
       this.$emit('update:priceFrom', this.currentPriceFrom);
@@ -91,6 +99,19 @@ export default {
       this.currentCategoryId = 0;
       this.currentColorId = 0;
     },
+    loadColors() {
+      axios.get(`${API_BASE_URL}/api/colors`)
+        .then((responce) => { this.colorsData = responce.data; });
+    },
+    // loadCategory() {
+    //   axios.get(`${API_BASE_URL}/api/productCategories`)
+    //     .then((responce) => { this.categoryData = responce.data; });
+    // },
+  },
+
+  created() {
+    this.loadColors();
+    // this.loadCategory();
   },
 };
 </script>
