@@ -1,6 +1,6 @@
 <template>
   <main class="content container">
-    <div class="content__top">
+    <div v-if="!productLoading" class="content__top">
       <ul class="breadcrumbs">
         <li class="breadcrumbs__item">
           <router-link class="breadcrumbs__link" :to="{ name: 'main' }">
@@ -24,7 +24,7 @@
       <ComponentPreloader v-if="productLoading" />
       <LoadingError v-if="productLoadingFailed" />
 
-      <div class="item__pics pics">
+      <div v-if="!productLoading" class="item__pics pics">
         <div class="pics__wrapper">
           <img width="570" height="570" :src="product.image.file.url" :alt="product.title">
         </div>

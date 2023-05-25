@@ -21,10 +21,21 @@ export default new Vuex.Store({
 
     // под корзину пользователя
     cartProductsData: [],
+
+    orderInfo: null,
   },
 
   // в мутациях не должно быть асинхронных операций
   mutations: {
+    updateOrderInfo(state, orderInfo) {
+      state.orderInfo = orderInfo;
+    },
+
+    resetCart(state) {
+      state.cartProducts = [];
+      state.cartProductsData = [];
+    },
+
     updateProductsCategories(state, categories) {
       state.productsCategories = categories;
     },
@@ -79,6 +90,18 @@ export default new Vuex.Store({
   // действия (у них нет ограничений по асинхронности)
   actions: {
     // в contex прилетает всё из этого экземпляра Store (доступны commit и все другие методы)
+    loadOrderInfo(contex, orderId) {
+      return axios
+        .get(`${API_BASE_URL}/api/orders/${orderId}`, {
+          params: {
+            userAccessKey: contex.state.userAccessKey,
+          },
+        })
+        .then((response) => {
+          contex.commit('updateOrderInfo', response.data);
+        });
+    },
+
     loadCart(contex) {
       contex.commit('syncCartLoading', true);
 

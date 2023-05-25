@@ -4,6 +4,8 @@ import MainPage from '@/pages/MainPage.vue';
 import NotFoundPage from '@/pages/NotFoundPage.vue';
 import ProductPage from '@/pages/ProductPage.vue';
 import CartPage from '@/pages/CartPage.vue';
+import OrderPage from '@/pages/OrderPage.vue';
+import OrderInfoPage from '@/pages/OrderInfoPage.vue';
 
 Vue.use(VueRouter);
 
@@ -24,6 +26,19 @@ const routes = [
     name: 'cart',
     component: CartPage,
     path: '/cart',
+  },
+
+  {
+    name: 'order',
+    component: OrderPage,
+    path: '/order',
+  },
+
+  {
+    name: 'orderInfo',
+    component: OrderInfoPage,
+    // через : задаётся динамический сегмент
+    path: '/order/:id',
   },
 
   {
