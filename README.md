@@ -1,4 +1,4 @@
-# my_first_project
+# Techno-mall
 
 ## Project setup
 ```
