@@ -112,7 +112,6 @@ export default {
   },
 
   created() {
-    // если перешли из корзины и инфа есть, то не делаем лишний запрос
     if (this.$store.state.orderInfo && this.$store.state.orderInfo.id === this.$route.params.id) {
       return;
     }

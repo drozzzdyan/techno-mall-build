@@ -28,7 +28,6 @@
 <script>
 import numberFormat from '@/helpers/numberFormat';
 import CountChanger from '@/components/CountChanger.vue';
-// import { mapMutations } from 'vuex';
 
 export default {
   props: ['item'],
@@ -41,10 +40,6 @@ export default {
     formatPrice(num) {
       return numberFormat(num);
     },
-
-    // ...mapMutations({ deleteProduct: 'deleteCartProductAmount' }),
-    // Тоже самое, что и с помощью mapMutations
-    // Создаём, чтобы не создавать много вычисляемых свойств
 
     deleteProduct(id) {
       this.$store.dispatch(

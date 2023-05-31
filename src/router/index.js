@@ -37,7 +37,6 @@ const routes = [
   {
     name: 'orderInfo',
     component: OrderInfoPage,
-    // через : задаётся динамический сегмент
     path: '/order/:id',
   },
 

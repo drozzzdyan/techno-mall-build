@@ -15,7 +15,6 @@
         <CartIndicator />
       </div>
     </header>
-    <!-- Отображается тот компонент, который соответсвует автивной странице в роутере -->
     <router-view />
 
     <footer class="footer">
@@ -122,7 +121,6 @@ export default {
   },
 
   created() {
-    // вызов действия, прописанного в глобальном хранилище
     this.$store.dispatch('loadCart');
   },
 };

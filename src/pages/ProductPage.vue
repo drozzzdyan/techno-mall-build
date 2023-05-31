@@ -152,7 +152,6 @@ export default {
       this.productAdded = false;
       this.productAddSending = true;
 
-      // передаём 2 аргумента: название мутации и значение
       this.$store
         .dispatch(
           'addProductToCart',
@@ -174,7 +173,6 @@ export default {
       this.productLoading = true;
       this.productLoadingFailed = false;
 
-      // из роутера берём параметры и вытаскиваем id
       axios.get(`${API_BASE_URL}/api/products/${this.$route.params.id}`)
         .then((response) => { this.productData = response.data; })
         .catch(() => { this.productLoadingFailed = true; })
@@ -186,15 +184,12 @@ export default {
     this.loadProduct();
   },
 
-  // ставим наблюдатель на динамический сегмент роутера
   watch: {
-    // eslint-disable-next-line
     '$route.params.id'() {
       this.loadProduct();
     },
   },
 
-  // во vue 3 уже не существует
   filters: {
     numberFormat,
   },

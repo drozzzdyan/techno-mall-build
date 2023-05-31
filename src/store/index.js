@@ -1,5 +1,3 @@
-// Создание хранилища на vuex
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
@@ -16,16 +14,13 @@ export default new Vuex.Store({
 
     cartProducts: [],
 
-    // под уникальный номер юзера
     userAccessKey: null,
 
-    // под корзину пользователя
     cartProductsData: [],
 
     orderInfo: null,
   },
 
-  // в мутациях не должно быть асинхронных операций
   mutations: {
     updateOrderInfo(state, orderInfo) {
       state.orderInfo = orderInfo;
@@ -53,9 +48,7 @@ export default new Vuex.Store({
       state.cartProductsData = items;
     },
 
-    // подгоним данные с api под свой формат
     syncCartProducts(state) {
-      // eslint-disable-next-line
       state.cartProducts = state.cartProductsData.map((el) => {
         return {
           productId: el.product.id,
@@ -69,10 +62,8 @@ export default new Vuex.Store({
     },
   },
 
-  // похоже на вычисляемое свойство
   getters: {
     cartDetailsProducts(state) {
-      // eslint-disable-next-line
       return state.cartProducts.map((item) => {
         return {
           ...item,
@@ -87,9 +78,7 @@ export default new Vuex.Store({
     },
   },
 
-  // действия (у них нет ограничений по асинхронности)
   actions: {
-    // в contex прилетает всё из этого экземпляра Store (доступны commit и все другие методы)
     loadOrderInfo(contex, orderId) {
       return axios
         .get(`${API_BASE_URL}/api/orders/${orderId}`, {
@@ -105,7 +94,6 @@ export default new Vuex.Store({
     loadCart(contex) {
       contex.commit('syncCartLoading', true);
 
-      // проверим userKey в localtorage
       const userAccessKey = localStorage.getItem('userAccessKey');
       if (userAccessKey !== null) {
         contex.commit('updateUserAccessKey', userAccessKey);
@@ -118,7 +106,6 @@ export default new Vuex.Store({
           },
         })
         .then((response) => {
-          // если не было ключа, то записываем его
           if (contex.state.userAccessKey === null) {
             localStorage.setItem('userAccessKey', response.data.user.accessKey);
             contex.commit('updateUserAccessKey', response.data.user.accessKey);
@@ -139,7 +126,6 @@ export default new Vuex.Store({
     },
 
     addProductToCart(contex, { productId, amount }) {
-      // добавляем return для возврата promise
       return axios
         .post(`${API_BASE_URL}/api/baskets/products`, {
           productId,
@@ -162,7 +148,6 @@ export default new Vuex.Store({
         return 0;
       }
 
-      // добавляем return для возврата promise
       return axios
         .put(`${API_BASE_URL}/api/baskets/products`, {
           productId,
@@ -181,7 +166,6 @@ export default new Vuex.Store({
     },
 
     deleteCartProduct(contex, productId) {
-      // добавляем return для возврата promise
       return axios
         .delete(`${API_BASE_URL}/api/baskets/products`, {
           params: {

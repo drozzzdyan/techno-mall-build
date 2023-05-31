@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable -->
   <main class="content container">
     <div class="content__top">
       <ul class="breadcrumbs">

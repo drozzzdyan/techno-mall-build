@@ -6,7 +6,6 @@
       </svg>
     </button>
 
-    <!-- eslint-disable-next-line -->
     <input type="text" :value="counter" name="count">
 
     <button type="button" aria-label="Добавить один товар" @click.prevent="increment">

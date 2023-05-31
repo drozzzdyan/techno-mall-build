@@ -17,8 +17,6 @@
         <LoadingError v-if="productsLoadingFailed" />
 
         <ProductList :products="products"></ProductList>
-        <!-- Короткая запись, если ничего не указываем внутри блока -->
-        <!-- Всё, что написано в cebab case будет само преобразовано в camel case -->
         <AppPagination v-model="page" :current-page.sync="page" :count-all-items="countAllProducts"
           :items-per-page="productsPerPage" />
       </section>
@@ -27,7 +25,6 @@
 </template>
 
 <script>
-// Импортируем данные и компоненты. @ - содержит абсолютный путь к папке src
 import ProductList from '@/components/ProductList.vue';
 import AppPagination from '@/components/AppPagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
@@ -38,7 +35,6 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/config';
 
 export default {
-  // Указываем какие компоненты мы будем подключать
   components: {
     ProductList,
     AppPagination,
@@ -49,19 +45,16 @@ export default {
 
   data() {
     return {
-      // данные для фильтрации
       filterPriceFrom: 0,
       filterPriceTo: 0,
       filterCategorieId: 0,
       filterColorId: 0,
-      // данные для пагинации
+
       page: 1,
       productsPerPage: 6,
 
-      // переменная для ответа из http запроса
       productsData: null,
 
-      // индикатор для загрузки данныз с API
       productsLoading: false,
       productsLoadingFailed: false,
     };
@@ -69,7 +62,6 @@ export default {
 
   computed: {
     products() {
-      // Так как на момент загрузки productsData ещё null
       return this.productsData ? this.productsData.items : [];
     },
     countAllProducts() {
@@ -79,17 +71,14 @@ export default {
 
   methods: {
     loadProducts() {
-      // предотвращаем повторный вызов вотчерами
       clearTimeout(this.loadTimerOut);
       this.loadTimerOut = setTimeout(() => {
         this.productsLoading = true;
         this.productsLoadingFailed = false;
-        // этот метод сразу переводит JSON
         axios
           .get(
             `${API_BASE_URL}/api/products`,
             {
-              // чтобы не писать огромную строчку из параметров
               params: {
                 page: this.page,
                 limit: this.productsPerPage,
@@ -112,7 +101,6 @@ export default {
     this.$store.dispatch('loadCategories');
   },
 
-  // следим за изменениями свойств, чтобы перерисовать страницу при необходиомсти
   watch: {
     page() {
       this.loadProducts();

@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable -->
   <aside class="filter">
     <h2 class="filter__title">Фильтры</h2>
 
@@ -103,15 +102,10 @@ export default {
       axios.get(`${API_BASE_URL}/api/colors`)
         .then((responce) => { this.colorsData = responce.data; });
     },
-    // loadCategory() {
-    //   axios.get(`${API_BASE_URL}/api/productCategories`)
-    //     .then((responce) => { this.categoryData = responce.data; });
-    // },
   },
 
   created() {
     this.loadColors();
-    // this.loadCategory();
   },
 };
 </script>
